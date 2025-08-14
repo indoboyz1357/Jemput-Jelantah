@@ -120,7 +120,8 @@ export const CustomerPickup: React.FC = () => {
           </h3>
           <div className="space-y-3">
             {myPendingPickups.map(pickup => (
-              <div key={pickup.id} className="border border-gray-200 rounded-lg p-4">
+              <React.Fragment key={pickup.id}>
+                <div className="border border-gray-200 rounded-lg p-4">
                 <div className="flex justify-between items-start mb-2">
                   <div>
                     <div className="font-medium text-gray-900">
@@ -161,6 +162,7 @@ export const CustomerPickup: React.FC = () => {
                   )}
                 </div>
               )}
+              </React.Fragment>
             ))}
           </div>
         </div>
