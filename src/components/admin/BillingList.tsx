@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { Receipt, DollarSign, Users, Truck, UserCheck, Filter } from 'lucide-react';
+import { Receipt, DollarSign, Users, Truck, UserCheck, Filter, Edit2, Save, X } from 'lucide-react';
 
 export const BillingList: React.FC = () => {
-  const { bills, customers } = useApp();
+  const { bills, customers, updateBill } = useApp();
   const [typeFilter, setTypeFilter] = useState<string>('all');
+  const [editingBill, setEditingBill] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState({ liters: '', rate: '', paid: false });
 
   const filteredBills = bills.filter(bill => {
     if (typeFilter === 'all') return true;
@@ -67,6 +69,39 @@ export const BillingList: React.FC = () => {
     customer: bills.filter(b => b.type === 'customer').reduce((sum, b) => sum + b.total, 0),
     kurir: bills.filter(b => b.type === 'kurir').reduce((sum, b) => sum + b.total, 0),
     referral: bills.filter(b => b.type === 'referral').reduce((sum, b) => sum + b.total, 0)
+  };
+
+  const handleEditBill = (bill: any) => {
+    setEditingBill(bill.id);
+    setEditForm({
+      liters: bill.liters.toString(),
+      rate: bill.rate.toString(),
+      paid: bill.paid
+    });
+  };
+
+  const handleSaveBill = (billId: string) => {
+    const liters = parseInt(editForm.liters);
+    const rate = parseInt(editForm.rate);
+    const total = liters * rate;
+    
+    updateBill(billId, {
+      liters,
+      rate,
+      total,
+      paid: editForm.paid
+    });
+    
+    setEditingBill(null);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingBill(null);
+    setEditForm({ liters: '', rate: '', paid: false });
+  };
+
+  const togglePaidStatus = (billId: string, currentStatus: boolean) => {
+    updateBill(billId, { paid: !currentStatus });
   };
 
   return (
@@ -156,6 +191,7 @@ export const BillingList: React.FC = () => {
         {filteredBills.map((bill) => {
           const typeConfig = getBillTypeConfig(bill.type);
           const TypeIcon = typeConfig.icon;
+          const isEditing = editingBill === bill.id;
 
           return (
             <div key={bill.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -180,32 +216,75 @@ export const BillingList: React.FC = () => {
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                <div className="bg-gray-50 rounded-lg p-3">
-                  <div className="text-sm text-gray-600">Liter</div>
-                  <div className="text-lg font-semibold text-gray-900">{bill.liters}L</div>
-                </div>
-                <div className="bg-gray-50 rounded-lg p-3">
-                  <div className="text-sm text-gray-600">Rate</div>
-                  <div className="text-lg font-semibold text-gray-900">
-                    Rp {bill.rate.toLocaleString()}
+              {isEditing ? (
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                  <div className="bg-blue-50 rounded-lg p-3">
+                    <div className="text-sm text-blue-600 mb-1">Liter</div>
+                    <input
+                      type="number"
+                      value={editForm.liters}
+                      onChange={(e) => setEditForm({...editForm, liters: e.target.value})}
+                      className="w-full px-2 py-1 border border-blue-300 rounded text-sm"
+                      min="1"
+                    />
+                  </div>
+                  <div className="bg-blue-50 rounded-lg p-3">
+                    <div className="text-sm text-blue-600 mb-1">Rate</div>
+                    <input
+                      type="number"
+                      value={editForm.rate}
+                      onChange={(e) => setEditForm({...editForm, rate: e.target.value})}
+                      className="w-full px-2 py-1 border border-blue-300 rounded text-sm"
+                      min="1"
+                    />
+                  </div>
+                  <div className="bg-blue-50 rounded-lg p-3">
+                    <div className="text-sm text-blue-600 mb-1">Total</div>
+                    <div className="text-lg font-semibold text-blue-800">
+                      Rp {(parseInt(editForm.liters || '0') * parseInt(editForm.rate || '0')).toLocaleString()}
+                    </div>
+                  </div>
+                  <div className="bg-blue-50 rounded-lg p-3">
+                    <div className="text-sm text-blue-600 mb-1">Status</div>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={editForm.paid}
+                        onChange={(e) => setEditForm({...editForm, paid: e.target.checked})}
+                        className="rounded"
+                      />
+                      <span className="text-sm">Lunas</span>
+                    </label>
                   </div>
                 </div>
-                <div className="bg-gray-50 rounded-lg p-3">
-                  <div className="text-sm text-gray-600">Total</div>
-                  <div className="text-lg font-semibold text-gray-900">
-                    Rp {bill.total.toLocaleString()}
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                  <div className="bg-gray-50 rounded-lg p-3">
+                    <div className="text-sm text-gray-600">Liter</div>
+                    <div className="text-lg font-semibold text-gray-900">{bill.liters}L</div>
+                  </div>
+                  <div className="bg-gray-50 rounded-lg p-3">
+                    <div className="text-sm text-gray-600">Rate</div>
+                    <div className="text-lg font-semibold text-gray-900">
+                      Rp {bill.rate.toLocaleString()}
+                    </div>
+                  </div>
+                  <div className="bg-gray-50 rounded-lg p-3">
+                    <div className="text-sm text-gray-600">Total</div>
+                    <div className="text-lg font-semibold text-gray-900">
+                      Rp {bill.total.toLocaleString()}
+                    </div>
+                  </div>
+                  <div className="bg-gray-50 rounded-lg p-3">
+                    <div className="text-sm text-gray-600">Status</div>
+                    <div className={`text-lg font-semibold ${bill.paid ? 'text-green-600' : 'text-red-600'}`}>
+                      {bill.paid ? 'Lunas' : 'Belum Bayar'}
+                    </div>
                   </div>
                 </div>
-                <div className="bg-gray-50 rounded-lg p-3">
-                  <div className="text-sm text-gray-600">Status</div>
-                  <div className={`text-lg font-semibold ${bill.paid ? 'text-green-600' : 'text-red-600'}`}>
-                    {bill.paid ? 'Lunas' : 'Belum Bayar'}
-                  </div>
-                </div>
-              </div>
+              )}
 
-              <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+              <div className="flex items-center justify-between pt-4 border-t border-gray-100 gap-2">
                 <div className="text-sm text-gray-500">
                   Tanggal: {bill.createdAt.toLocaleDateString('id-ID', {
                     day: 'numeric',
@@ -213,10 +292,43 @@ export const BillingList: React.FC = () => {
                     year: 'numeric'
                   })}
                 </div>
-                {!bill.paid && (
-                  <button className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors duration-200">
-                    Tandai Lunas
-                  </button>
+                
+                {isEditing ? (
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleSaveBill(bill.id)}
+                      className="bg-green-500 text-white px-3 py-2 rounded-lg hover:bg-green-600 transition-colors duration-200 flex items-center gap-1"
+                    >
+                      <Save size={16} />
+                      <span className="hidden sm:inline">Simpan</span>
+                    </button>
+                    <button
+                      onClick={handleCancelEdit}
+                      className="bg-gray-500 text-white px-3 py-2 rounded-lg hover:bg-gray-600 transition-colors duration-200 flex items-center gap-1"
+                    >
+                      <X size={16} />
+                      <span className="hidden sm:inline">Batal</span>
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleEditBill(bill)}
+                      className="bg-blue-500 text-white px-3 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-200 flex items-center gap-1"
+                    >
+                      <Edit2 size={16} />
+                      <span className="hidden sm:inline">Edit</span>
+                    </button>
+                    {!bill.paid && (
+                      <button
+                        onClick={() => togglePaidStatus(bill.id, bill.paid)}
+                        className="bg-green-500 text-white px-3 py-2 rounded-lg hover:bg-green-600 transition-colors duration-200"
+                      >
+                        <span className="hidden sm:inline">Tandai Lunas</span>
+                        <span className="sm:hidden">Lunas</span>
+                      </button>
+                    )}
+                  </div>
                 )}
               </div>
             </div>

@@ -34,8 +34,8 @@ export const KurirDashboard: React.FC = () => {
                 <Truck className="text-white" size={24} />
               </div>
               <div>
-                <h1 className="text-2xl font-bold">Dashboard Kurir</h1>
-                <p className="opacity-90">Selamat datang, {currentUser?.name}</p>
+                <h1 className="text-xl font-bold">Kurir</h1>
+                <p className="opacity-90 text-sm">{currentUser?.name}</p>
               </div>
             </div>
             <button
@@ -43,38 +43,37 @@ export const KurirDashboard: React.FC = () => {
               className="flex items-center gap-2 px-4 py-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors duration-200"
             >
               <LogOut size={18} />
-              Logout
+              <span className="hidden sm:inline">Logout</span>
             </button>
           </div>
         </div>
       </header>
 
-      <div className="flex">
-        <nav className="w-64 bg-white shadow-sm min-h-screen">
-          <div className="p-4">
-            <div className="space-y-2">
-              {tabs.map(({ id, name, icon: Icon }) => (
-                <button
-                  key={id}
-                  onClick={() => setActiveTab(id)}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
-                    activeTab === id
-                      ? 'bg-green-50 text-green-600 border-green-200'
-                      : 'text-gray-700 hover:bg-gray-50'
-                  }`}
-                >
-                  <Icon size={20} />
-                  <span className="font-medium">{name}</span>
-                </button>
-              ))}
-            </div>
+      {/* Mobile-friendly top navigation */}
+      <nav className="bg-white shadow-sm border-b sticky top-0 z-10">
+        <div className="px-4 py-2">
+          <div className="flex overflow-x-auto scrollbar-hide gap-2">
+            {tabs.map(({ id, name, icon: Icon }) => (
+              <button
+                key={id}
+                onClick={() => setActiveTab(id)}
+                className={`flex items-center gap-2 px-4 py-3 rounded-lg whitespace-nowrap transition-all duration-200 ${
+                  activeTab === id
+                    ? 'bg-green-50 text-green-600 border border-green-200'
+                    : 'text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                <Icon size={18} />
+                <span className="font-medium text-sm">{name}</span>
+              </button>
+            ))}
           </div>
-        </nav>
+        </div>
+      </nav>
 
-        <main className="flex-1 p-6">
-          {renderActiveTab()}
-        </main>
-      </div>
+      <main className="p-4 sm:p-6">
+        {renderActiveTab()}
+      </main>
     </div>
   );
 };

@@ -13,6 +13,7 @@ interface AppContextType {
   createPickupRequest: (customerId: string, estimatedLiters: number) => void;
   updatePickupStatus: (id: string, status: PickupRequest['status'], actualLiters?: number, kurirId?: string) => void;
   generateBills: (pickupId: string) => void;
+  updateBill: (billId: string, updates: Partial<Bill>) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -222,14 +223,15 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const customer = customers.find(c => c.id === pickup.customerId);
     const liters = pickup.actualLiters;
     
-    // Customer bill
+    // Customer bill with tiered pricing
+    const customerRate = liters >= 100 ? 6500 : 6000;
     const customerBill: Bill = {
       id: `customer-${pickupId}`,
       type: 'customer',
       customerId: pickup.customerId,
       liters,
-      rate: 6000,
-      total: liters * 6000,
+      rate: customerRate,
+      total: liters * customerRate,
       pickupId,
       createdAt: new Date(),
       paid: false
@@ -269,6 +271,12 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setBills(prev => [...prev, ...newBills]);
   };
 
+  const updateBill = (billId: string, updates: Partial<Bill>) => {
+    setBills(prev => prev.map(bill => 
+      bill.id === billId ? { ...bill, ...updates } : bill
+    ));
+  };
+
   return (
     <AppContext.Provider value={{
       currentUser,
@@ -281,7 +289,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       updateCustomer,
       createPickupRequest,
       updatePickupStatus,
-      generateBills
+      generateBills,
+      updateBill
     }}>
       {children}
     </AppContext.Provider>
