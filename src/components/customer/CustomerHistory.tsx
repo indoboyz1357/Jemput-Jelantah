@@ -46,11 +46,11 @@ export const CustomerHistory: React.FC = () => {
     <div className="space-y-6">
       <div className="flex items-center gap-3">
         <div className="bg-purple-500 rounded-lg p-3">
-          <History className="text-white" size={24} />
+          <History className="text-white" size={20} />
         </div>
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Riwayat Pickup</h2>
-          <p className="text-gray-600">Lihat semua aktivitas pickup Anda</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Riwayat Pickup</h2>
+          <p className="text-sm sm:text-base text-gray-600">Lihat semua aktivitas pickup Anda</p>
         </div>
       </div>
 
@@ -61,23 +61,23 @@ export const CustomerHistory: React.FC = () => {
         </div>
       )}
 
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         {myPickups.map((pickup) => {
           const statusConfig = getStatusConfig(pickup.status);
           const StatusIcon = statusConfig.icon;
 
           return (
-            <div key={pickup.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div key={pickup.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div className={`p-2 rounded-lg ${statusConfig.iconColor.replace('text-', 'bg-')}/10`}>
                     <StatusIcon className={statusConfig.iconColor} size={20} />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900">
+                    <h3 className="text-base sm:text-lg font-semibold text-gray-900">
                       Pickup Request
                     </h3>
-                    <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
+                    <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600 mt-1">
                       <Calendar size={14} />
                       {pickup.createdAt.toLocaleDateString('id-ID', {
                         day: 'numeric',
@@ -87,38 +87,38 @@ export const CustomerHistory: React.FC = () => {
                     </div>
                   </div>
                 </div>
-                <span className={`px-3 py-1 rounded-full text-sm font-medium ${statusConfig.color}`}>
+                <span className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${statusConfig.color}`}>
                   {statusConfig.label}
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                <div className="bg-gray-50 rounded-lg p-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 mb-4">
+                <div className="bg-gray-50 rounded-lg p-3 sm:p-4">
                   <div className="flex items-center gap-2 mb-1">
                     <Droplets size={16} className="text-gray-400" />
-                    <span className="text-sm text-gray-600">Estimasi Liter</span>
+                    <span className="text-xs sm:text-sm text-gray-600">Estimasi Liter</span>
                   </div>
-                  <div className="text-lg font-semibold text-gray-900">
+                  <div className="text-base sm:text-lg font-semibold text-gray-900">
                     {pickup.estimatedLiters}L
                   </div>
                 </div>
 
                 {pickup.actualLiters && (
-                  <div className="bg-green-50 rounded-lg p-3">
+                  <div className="bg-green-50 rounded-lg p-3 sm:p-4">
                     <div className="flex items-center gap-2 mb-1">
                       <CheckCircle size={16} className="text-green-400" />
-                      <span className="text-sm text-green-600">Liter Aktual</span>
+                      <span className="text-xs sm:text-sm text-green-600">Liter Aktual</span>
                     </div>
-                    <div className="text-lg font-semibold text-green-800">
+                    <div className="text-base sm:text-lg font-semibold text-green-800">
                       {pickup.actualLiters}L
                     </div>
                   </div>
                 )}
 
                 {pickup.status === 'completed' && pickup.actualLiters && (
-                  <div className="bg-blue-50 rounded-lg p-3">
-                    <div className="text-sm text-blue-600 mb-1">Total Tagihan</div>
-                    <div className="text-lg font-semibold text-blue-800">
+                  <div className="bg-blue-50 rounded-lg p-3 sm:p-4">
+                    <div className="text-xs sm:text-sm text-blue-600 mb-1">Total Tagihan</div>
+                    <div className="text-base sm:text-lg font-semibold text-blue-800">
                       Rp {(pickup.actualLiters * (pickup.actualLiters >= 100 ? 6500 : 6000)).toLocaleString()}
                     </div>
                   </div>
@@ -127,11 +127,11 @@ export const CustomerHistory: React.FC = () => {
 
               {pickup.kurirName && (
                 <div className="pt-4 border-t border-gray-100">
-                  <div className="text-sm text-gray-600">
+                  <div className="text-xs sm:text-sm text-gray-600">
                     <span className="font-medium">Kurir:</span> {pickup.kurirName}
                   </div>
                   {pickup.completedAt && (
-                    <div className="text-sm text-gray-600 mt-1">
+                    <div className="text-xs sm:text-sm text-gray-600 mt-1">
                       <span className="font-medium">Selesai pada:</span> {pickup.completedAt.toLocaleString('id-ID')}
                     </div>
                   )}
