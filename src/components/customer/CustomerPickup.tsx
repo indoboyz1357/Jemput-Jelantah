@@ -94,7 +94,8 @@ export const CustomerPickup: React.FC = () => {
           <div className="bg-gray-50 rounded-lg p-4">
             <h3 className="font-medium text-gray-900 mb-2">Informasi Tarif:</h3>
             <div className="text-sm text-gray-600 space-y-1">
-              <p>• Tarif pickup: Rp 6.000 per liter</p>
+              <p>• Tarif pickup: Rp 6.000 per liter (40-99L)</p>
+              <p>• Tarif pickup: Rp 6.500 per liter (100L+)</p>
               <p>• Pembayaran dilakukan setelah pickup selesai</p>
               <p>• Tarif dihitung berdasarkan liter aktual yang dijemput</p>
             </div>
@@ -137,12 +138,29 @@ export const CustomerPickup: React.FC = () => {
                     {pickup.status === 'request' ? 'Menunggu' : 'Sedang Diproses'}
                   </span>
                 </div>
-                {pickup.kurirName && (
-                  <div className="text-sm text-gray-600">
-                    Kurir: {pickup.kurirName}
+
+                {pickup.status === 'completed' && pickup.actualLiters && (
+                  <div className="bg-blue-50 rounded-lg p-3">
+                    <div className="text-sm text-blue-600 mb-1">Total Tagihan</div>
+                    <div className="text-lg font-semibold text-blue-800">
+                      Rp {(pickup.actualLiters * (pickup.actualLiters >= 100 ? 6500 : 6000)).toLocaleString()}
+                    </div>
                   </div>
                 )}
               </div>
+
+              {pickup.kurirName && (
+                <div className="pt-4 border-t border-gray-100">
+                  <div className="text-sm text-gray-600">
+                    <span className="font-medium">Kurir:</span> {pickup.kurirName}
+                  </div>
+                  {pickup.completedAt && (
+                    <div className="text-lg font-semibold text-blue-800">
+                      <span className="font-medium">Selesai pada:</span> {pickup.completedAt.toLocaleString('id-ID')}
+                    </div>
+                  )}
+                </div>
+              )}
             ))}
           </div>
         </div>

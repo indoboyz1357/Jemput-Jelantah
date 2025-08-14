@@ -119,7 +119,7 @@ export const CustomerHistory: React.FC = () => {
                   <div className="bg-blue-50 rounded-lg p-3">
                     <div className="text-sm text-blue-600 mb-1">Total Tagihan</div>
                     <div className="text-lg font-semibold text-blue-800">
-                      Rp {(pickup.actualLiters * 6000).toLocaleString()}
+                      Rp {(pickup.actualLiters * (pickup.actualLiters >= 100 ? 6500 : 6000)).toLocaleString()}
                     </div>
                   </div>
                 )}
