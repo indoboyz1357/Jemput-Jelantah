@@ -12,8 +12,10 @@ interface AppContextType {
   updateCustomer: (id: string, updates: Partial<Customer>) => void;
   createPickupRequest: (customerId: string, estimatedLiters: number) => void;
   updatePickupStatus: (id: string, status: PickupRequest['status'], actualLiters?: number, kurirId?: string) => void;
+  updatePickupProof: (id: string, proofUrl: string) => void;
   generateBills: (pickupId: string) => void;
   updateBill: (billId: string, updates: Partial<Bill>) => void;
+  updateBillPaymentProof: (billId: string, proofUrl: string) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -33,7 +35,13 @@ const initialCustomers: Customer[] = [
     phone: '081234567890',
     role: 'customer',
     address: 'Jl. Sudirman No. 123, Jakarta',
+    kecamatan: 'Tanah Abang',
+    kota: 'Jakarta Pusat',
     referredBy: '',
+    bankName: 'BCA',
+    accountName: 'John Doe',
+    accountNumber: '1234567890',
+    shareLocation: 'https://maps.google.com/?q=-6.2088,106.8456',
     totalLiters: 150,
     downlines: ['2', '3'],
     totalDownlineLiters: 80,
@@ -45,7 +53,12 @@ const initialCustomers: Customer[] = [
     phone: '081234567891',
     role: 'customer',
     address: 'Jl. Thamrin No. 456, Jakarta',
+    kecamatan: 'Menteng',
+    kota: 'Jakarta Pusat',
     referredBy: '1',
+    bankName: 'Mandiri',
+    accountName: 'Jane Smith',
+    accountNumber: '0987654321',
     totalLiters: 45,
     downlines: [],
     totalDownlineLiters: 0,
@@ -57,7 +70,12 @@ const initialCustomers: Customer[] = [
     phone: '081234567892',
     role: 'customer',
     address: 'Jl. Gatot Subroto No. 789, Jakarta',
+    kecamatan: 'Setiabudi',
+    kota: 'Jakarta Selatan',
     referredBy: '1',
+    bankName: 'BRI',
+    accountName: 'Bob Wilson',
+    accountNumber: '5555666677',
     totalLiters: 35,
     downlines: [],
     totalDownlineLiters: 0,
@@ -216,6 +234,11 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     }));
   };
 
+  const updatePickupProof = (id: string, proofUrl: string) => {
+    setPickupRequests(prev => prev.map(request => 
+      request.id === id ? { ...request, pickupProofUrl: proofUrl } : request
+    ));
+  };
   const generateBills = (pickupId: string) => {
     const pickup = pickupRequests.find(p => p.id === pickupId);
     if (!pickup || !pickup.actualLiters) return;
@@ -224,7 +247,13 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const liters = pickup.actualLiters;
     
     // Customer bill with tiered pricing
-    const customerRate = liters >= 100 ? 6500 : 6000;
+    let customerRate = 6000; // Default rate
+    if (liters >= 100) {
+      customerRate = 6500;
+    } else if (liters >= 200) {
+      customerRate = 7000;
+    }
+    
     const customerBill: Bill = {
       id: `customer-${pickupId}`,
       type: 'customer',
@@ -277,6 +306,11 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     ));
   };
 
+  const updateBillPaymentProof = (billId: string, proofUrl: string) => {
+    setBills(prev => prev.map(bill => 
+      bill.id === billId ? { ...bill, paymentProofUrl: proofUrl, paid: true } : bill
+    ));
+  };
   return (
     <AppContext.Provider value={{
       currentUser,
@@ -289,8 +323,10 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       updateCustomer,
       createPickupRequest,
       updatePickupStatus,
+      updatePickupProof,
       generateBills,
-      updateBill
+      updateBill,
+      updateBillPaymentProof
     }}>
       {children}
     </AppContext.Provider>

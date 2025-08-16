@@ -100,7 +100,14 @@ export const CustomerHome: React.FC = () => {
               <MapPin className="text-gray-400 mt-0.5" size={16} />
               <div>
                 <div className="text-xs sm:text-sm text-gray-600">Alamat</div>
-                <div className="text-sm sm:text-base font-medium text-gray-900">{customer.address}</div>
+                <div className="text-sm sm:text-base font-medium text-gray-900">
+                  {customer.address}
+                  {customer.kecamatan && (
+                    <div className="text-xs text-gray-500 mt-1">
+                      {customer.kecamatan}, {customer.kota}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -116,6 +123,18 @@ export const CustomerHome: React.FC = () => {
                 </div>
               </div>
             </div>
+            
+            {/* Bank Info */}
+            {customer.bankName && (
+              <div className="pt-3 border-t border-gray-100">
+                <div className="text-xs sm:text-sm text-gray-600 mb-2">Informasi Bank</div>
+                <div className="space-y-1">
+                  <div className="text-sm font-medium text-gray-900">{customer.bankName}</div>
+                  <div className="text-xs text-gray-600">{customer.accountName}</div>
+                  <div className="text-xs text-gray-600">{customer.accountNumber}</div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 

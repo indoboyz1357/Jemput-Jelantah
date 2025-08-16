@@ -144,8 +144,12 @@ export const CustomerPickup: React.FC = () => {
                   <div className="bg-blue-50 rounded-lg p-3">
                     <div className="text-xs sm:text-sm text-blue-600 mb-1">Total Tagihan</div>
                     <div className="text-base sm:text-lg font-semibold text-blue-800">
-                      Rp {(pickup.actualLiters * (pickup.actualLiters >= 100 ? 6500 : 6000)).toLocaleString()}
-                    </div>
+                      Rp {(pickup.actualLiters * (
+                        pickup.actualLiters >= 200 ? 7000 : 
+                        pickup.actualLiters >= 100 ? 6500 : 6000
+                      )).toLocaleString()}
+                <p>• Tarif pickup: Rp 6.500 per liter (100-199L)</p>
+                <p>• Tarif pickup: Rp 7.000 per liter (200L+)</p>
                   </div>
                 )}
               </div>

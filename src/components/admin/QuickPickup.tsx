@@ -13,7 +13,13 @@ export const QuickPickup: React.FC = () => {
   const [newCustomer, setNewCustomer] = useState({
     name: '',
     address: '',
-    referredBy: ''
+    kecamatan: '',
+    kota: '',
+    referredBy: '',
+    bankName: '',
+    accountName: '',
+    accountNumber: '',
+    shareLocation: ''
   });
 
   const handleSearchCustomer = () => {
@@ -30,7 +36,10 @@ export const QuickPickup: React.FC = () => {
   };
 
   const handleAddCustomer = () => {
-    if (!newCustomer.name || !newCustomer.address) return;
+    if (!newCustomer.name || !newCustomer.address || !newCustomer.kecamatan || !newCustomer.kota) {
+      alert('Mohon lengkapi data wajib: Nama, Alamat, Kecamatan, dan Kota');
+      return;
+    }
     
     addCustomer({
       ...newCustomer,
@@ -44,7 +53,17 @@ export const QuickPickup: React.FC = () => {
       if (customer) {
         setFoundCustomer(customer);
         setShowAddCustomer(false);
-        setNewCustomer({ name: '', address: '', referredBy: '' });
+        setNewCustomer({ 
+          name: '', 
+          address: '', 
+          kecamatan: '', 
+          kota: '', 
+          referredBy: '', 
+          bankName: '', 
+          accountName: '', 
+          accountNumber: '', 
+          shareLocation: '' 
+        });
       }
     }, 100);
   };
@@ -66,7 +85,17 @@ export const QuickPickup: React.FC = () => {
     setFoundCustomer(null);
     setShowAddCustomer(false);
     setEstimatedLiters('');
-    setNewCustomer({ name: '', address: '', referredBy: '' });
+    setNewCustomer({ 
+      name: '', 
+      address: '', 
+      kecamatan: '', 
+      kota: '', 
+      referredBy: '', 
+      bankName: '', 
+      accountName: '', 
+      accountNumber: '', 
+      shareLocation: '' 
+    });
   };
 
   return (
@@ -137,8 +166,61 @@ export const QuickPickup: React.FC = () => {
                 <Plus size={18} />
                 Customer Belum Terdaftar - Daftar Baru
               </h3>
-              <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
+              {/* Basic Info */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                    Nama Lengkap *
+                  </label>
+                  <input
+                    type="text"
+                    value={newCustomer.name}
+                    onChange={(e) => setNewCustomer({...newCustomer, name: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                    placeholder="Masukkan nama lengkap"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                    Kecamatan *
+                  </label>
+                  <input
+                    type="text"
+                    value={newCustomer.kecamatan}
+                    onChange={(e) => setNewCustomer({...newCustomer, kecamatan: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                    placeholder="Masukkan kecamatan"
+                  />
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div>
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                    Alamat Lengkap *
+                  </label>
+                  <textarea
+                    value={newCustomer.address}
+                    onChange={(e) => setNewCustomer({...newCustomer, address: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                    placeholder="Masukkan alamat lengkap"
+                    rows={2}
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                    Kota *
+                  </label>
+                  <input
+                    type="text"
+                    value={newCustomer.kota}
+                    onChange={(e) => setNewCustomer({...newCustomer, kota: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                    placeholder="Masukkan kota"
+                  />
+                </div>
+              </div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Nama Lengkap
                   </label>
@@ -189,6 +271,8 @@ export const QuickPickup: React.FC = () => {
             </div>
           )}
 
+              {/* Referral */}
+              <div>
           {/* Step 2: Create Pickup Request */}
           {foundCustomer && (
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
@@ -215,15 +299,62 @@ export const QuickPickup: React.FC = () => {
                     disabled={!estimatedLiters}
                     className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors duration-200"
                   >
-                    Buat Request Pickup
+                  Referral (HP yang merekomendasikan) - Opsional
                   </button>
-                  <button
-                    onClick={resetForm}
-                    className="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition-colors duration-200"
-                  >
+                <select
+                  value={newCustomer.referredBy}
+                  onChange={(e) => setNewCustomer({...newCustomer, referredBy: e.target.value})}
                     Reset
-                  </button>
-                </div>
+                >
+                  <option value="">Pilih referral (opsional)</option>
+                  {customers.map(customer => (
+                    <option key={customer.id} value={customer.id}>
+                      {customer.name} - {customer.phone}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              
+              {/* Payment Info */}
+              <div className="border-t pt-3 sm:pt-4">
+                <h4 className="text-sm font-semibold text-gray-800 mb-3">Informasi Pembayaran</h4>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                  <div>
+                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                      Nama Bank
+                    </label>
+                    <select
+                      value={newCustomer.bankName}
+                      onChange={(e) => setNewCustomer({...newCustomer, bankName: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                    >
+                      <option value="">Pilih Bank</option>
+                      <option value="BCA">BCA</option>
+                      <option value="Mandiri">Mandiri</option>
+                      <option value="BRI">BRI</option>
+                      <option value="BNI">BNI</option>
+                      <option value="CIMB">CIMB</option>
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                  Share Lokasi (Google Maps Link)
+                      <option value="BTN">BTN</option>
+                <input
+                  type="url"
+                  value={newCustomer.shareLocation}
+                  onChange={(e) => setNewCustomer({...newCustomer, shareLocation: e.target.value})}
+                  <div>
+                  placeholder="https://maps.google.com/?q=..."
+                    </label>
+                    <input
+              
+                    />
+                  </div>
+                className="w-full bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors duration-200 text-sm"
+              </div>
+              
+              {/* Share Location */}
+              
+              <div className="text-xs text-gray-500 mt-2">
+                * Field wajib diisi
               </div>
             </div>
           )}

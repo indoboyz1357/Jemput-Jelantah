@@ -10,7 +10,13 @@ export interface User {
 export interface Customer extends User {
   role: 'customer';
   address: string;
+  kecamatan: string;
+  kota: string;
   referredBy?: string;
+  bankName?: string;
+  accountName?: string;
+  accountNumber?: string;
+  shareLocation?: string;
   totalLiters: number;
   downlines: string[];
   totalDownlineLiters: number;
@@ -27,6 +33,7 @@ export interface PickupRequest {
   status: 'request' | 'on-process' | 'completed';
   kurirId?: string;
   kurirName?: string;
+  pickupProofUrl?: string;
   createdAt: Date;
   completedAt?: Date;
 }
@@ -41,6 +48,7 @@ export interface Bill {
   rate: number;
   total: number;
   pickupId: string;
+  paymentProofUrl?: string;
   createdAt: Date;
   paid: boolean;
 }

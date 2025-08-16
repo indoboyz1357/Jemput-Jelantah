@@ -60,13 +60,28 @@ export const CustomerList: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {filteredCustomers.map((customer) => (
           <div key={customer.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-lg transition-shadow duration-200">
-            <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <div>{customer.address}</div>
+                    {customer.kecamatan && (
+                      <div className="text-xs text-gray-500 mt-1">
+                        {customer.kecamatan}, {customer.kota}
+                      </div>
+                    )}
+                  </div>
               <div>
                 <h3 className="text-lg font-semibold text-gray-900">{customer.name}</h3>
                 <div className="flex items-center gap-2 text-gray-600 mt-1">
                   <Phone size={14} />
                   <span className="text-sm">{customer.phone}</span>
                 </div>
+                
+                {/* Bank Info */}
+                {customer.bankName && (
+                  <div className="text-sm text-gray-700">
+                    <div className="font-medium">Bank: {customer.bankName}</div>
+                    <div className="text-xs text-gray-500">{customer.accountName} - {customer.accountNumber}</div>
+                  </div>
+                )}
               </div>
               <div className="bg-blue-50 px-3 py-1 rounded-full">
                 <span className="text-blue-600 text-sm font-medium">Customer</span>
