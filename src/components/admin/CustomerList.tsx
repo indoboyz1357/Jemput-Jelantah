@@ -60,14 +60,7 @@ export const CustomerList: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {filteredCustomers.map((customer) => (
           <div key={customer.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-lg transition-shadow duration-200">
-                  <div>
-                    <div>{customer.address}</div>
-                    {customer.kecamatan && (
-                      <div className="text-xs text-gray-500 mt-1">
-                        {customer.kecamatan}, {customer.kota}
-                      </div>
-                    )}
-                  </div>
+            <div className="flex items-start justify-between mb-4">
               <div>
                 <h3 className="text-lg font-semibold text-gray-900">{customer.name}</h3>
                 <div className="flex items-center gap-2 text-gray-600 mt-1">
@@ -77,7 +70,7 @@ export const CustomerList: React.FC = () => {
                 
                 {/* Bank Info */}
                 {customer.bankName && (
-                  <div className="text-sm text-gray-700">
+                  <div className="text-sm text-gray-700 mt-2">
                     <div className="font-medium">Bank: {customer.bankName}</div>
                     <div className="text-xs text-gray-500">{customer.accountName} - {customer.accountNumber}</div>
                   </div>
@@ -91,7 +84,14 @@ export const CustomerList: React.FC = () => {
             <div className="space-y-3 mb-4">
               <div className="flex items-start gap-2 text-sm text-gray-700">
                 <MapPin size={14} className="mt-0.5 text-gray-400" />
-                <span>{customer.address}</span>
+                <div>
+                  <div>{customer.address}</div>
+                  {customer.kecamatan && (
+                    <div className="text-xs text-gray-500 mt-1">
+                      {customer.kecamatan}, {customer.kota}
+                    </div>
+                  )}
+                </div>
               </div>
               
               <div className="flex items-center gap-2 text-sm text-gray-700">
