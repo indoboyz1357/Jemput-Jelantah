@@ -3,26 +3,19 @@ import { useApp } from '../../context/AppContext';
 import { Plus, Truck, Clock, CheckCircle, AlertCircle } from 'lucide-react';
 
 export const CustomerPickup: React.FC = () => {
-  const { user, pickups, addPickup } = useApp();
+  const { currentUser, pickupRequests, createPickupRequest } = useApp();
   const [estimatedLiters, setEstimatedLiters] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const userPickups = pickups.filter(pickup => pickup.customerId === user?.id);
+  const userPickups = pickupRequests.filter(pickup => pickup.customerId === currentUser?.id);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user || estimatedLiters <= 0) return;
+    if (!currentUser || estimatedLiters <= 0) return;
 
     setIsSubmitting(true);
     try {
-      await addPickup({
-        customerId: user.id,
-        customerName: user.name,
-        customerPhone: user.phone,
-        customerAddress: user.address,
-        estimatedLiters,
-        status: 'pending'
-      });
+      createPickupRequest(currentUser.id, estimatedLiters);
       setEstimatedLiters(0);
       alert('Permintaan pickup berhasil dikirim!');
     } catch (error) {

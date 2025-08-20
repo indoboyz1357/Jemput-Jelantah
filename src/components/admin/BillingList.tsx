@@ -3,20 +3,18 @@ import { useApp } from '../../context/AppContext';
 import { Receipt, Search, Upload, Check, Clock, AlertCircle } from 'lucide-react';
 
 export const BillingList: React.FC = () => {
-  const { bills, updateBillStatus, uploadPaymentProof } = useApp();
+  const { bills, updateBill, updateBillPaymentProof } = useApp();
   const [searchTerm, setSearchTerm] = useState('');
   const [uploadingBillId, setUploadingBillId] = useState<string | null>(null);
 
-  const filteredBills = bills.filter(bill =>
-    bill.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    bill.id.includes(searchTerm)
-  );
+  const filteredBills = bills.filter(bill => bill.id.includes(searchTerm));
 
   const handlePaymentProofUpload = async (billId: string, file: File) => {
     setUploadingBillId(billId);
     try {
-      await uploadPaymentProof(billId, file);
-      await updateBillStatus(billId, 'paid');
+      // In this demo app we don't actually upload the file. Assume URL created elsewhere.
+      const fakeUrl = URL.createObjectURL(file);
+      updateBillPaymentProof(billId, fakeUrl);
     } catch (error) {
       console.error('Error uploading payment proof:', error);
     } finally {
@@ -98,33 +96,31 @@ export const BillingList: React.FC = () => {
               <div className="flex-1 space-y-3">
                 <div className="flex items-start justify-between">
                   <div>
-                    <h3 className="text-base sm:text-lg font-semibold text-gray-900">
-                      {bill.customerName}
-                    </h3>
+                    <h3 className="text-base sm:text-lg font-semibold text-gray-900">Tagihan Pickup</h3>
                     <p className="text-xs sm:text-sm text-gray-500">ID: {bill.id}</p>
                   </div>
-                  <div className={`px-2 sm:px-3 py-1 rounded-full flex items-center gap-1 ${getStatusColor(bill.status)}`}>
-                    {getStatusIcon(bill.status)}
-                    <span className="text-xs sm:text-sm font-medium">{getStatusText(bill.status)}</span>
+                  <div className={`px-2 sm:px-3 py-1 rounded-full flex items-center gap-1 ${getStatusColor(bill.paid ? 'paid' : 'pending')}`}>
+                    {getStatusIcon(bill.paid ? 'paid' : 'pending')}
+                    <span className="text-xs sm:text-sm font-medium">{getStatusText(bill.paid ? 'paid' : 'pending')}</span>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                   <div className="bg-blue-50 p-3 rounded-lg">
                     <div className="text-lg sm:text-xl font-bold text-blue-600">
-                      {bill.totalLiters}L
+                      {bill.liters}L
                     </div>
                     <div className="text-xs sm:text-sm text-gray-600">Total Liter</div>
                   </div>
                   <div className="bg-green-50 p-3 rounded-lg">
                     <div className="text-lg sm:text-xl font-bold text-green-600">
-                      Rp {bill.amount.toLocaleString('id-ID')}
+                      Rp {bill.total.toLocaleString('id-ID')}
                     </div>
                     <div className="text-xs sm:text-sm text-gray-600">Total Tagihan</div>
                   </div>
                   <div className="bg-purple-50 p-3 rounded-lg">
                     <div className="text-lg sm:text-xl font-bold text-purple-600">
-                      {bill.pricePerLiter.toLocaleString('id-ID')}
+                      {bill.rate.toLocaleString('id-ID')}
                     </div>
                     <div className="text-xs sm:text-sm text-gray-600">Per Liter</div>
                   </div>
@@ -140,7 +136,7 @@ export const BillingList: React.FC = () => {
               </div>
 
               {/* Payment Proof Upload */}
-              {bill.status === 'pending' && (
+              {!bill.paid && (
                 <div className="w-full sm:w-auto">
                   <label className="block">
                     <input
@@ -170,7 +166,7 @@ export const BillingList: React.FC = () => {
               )}
 
               {/* Payment Proof Display */}
-              {bill.status === 'paid' && bill.paymentProofUrl && (
+              {bill.paid && bill.paymentProofUrl && (
                 <div className="w-full sm:w-32">
                   <img
                     src={bill.paymentProofUrl}
