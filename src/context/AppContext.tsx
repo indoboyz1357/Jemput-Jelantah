@@ -8,7 +8,7 @@ interface AppContextType {
   bills: Bill[];
   login: (phone: string, role: 'admin' | 'customer' | 'kurir') => boolean;
   logout: () => void;
-  addCustomer: (customer: Omit<Customer, 'id' | 'createdAt'>) => void;
+  addCustomer: (customer: Omit<Customer, 'id' | 'createdAt'>) => Customer;
   updateCustomer: (id: string, updates: Partial<Customer>) => void;
   createPickupRequest: (customerId: string, estimatedLiters: number) => void;
   updatePickupStatus: (id: string, status: PickupRequest['status'], actualLiters?: number, kurirId?: string) => void;
@@ -151,7 +151,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setCurrentUser(null);
   };
 
-  const addCustomer = (customerData: Omit<Customer, 'id' | 'createdAt'>) => {
+  const addCustomer = (customerData: Omit<Customer, 'id' | 'createdAt'>): Customer => {
     const newCustomer: Customer = {
       ...customerData,
       id: Date.now().toString(),
@@ -171,6 +171,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
           : customer
       ));
     }
+
+    return newCustomer;
   };
 
   const updateCustomer = (id: string, updates: Partial<Customer>) => {

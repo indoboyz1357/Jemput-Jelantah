@@ -1,9 +1,10 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase: SupabaseClient | null =
+  supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null;
 
 // Image compression utility
 export const compressImage = (file: File, maxWidth: number = 300): Promise<File> => {
@@ -40,6 +41,11 @@ export const compressImage = (file: File, maxWidth: number = 300): Promise<File>
 export const uploadImage = async (file: File, bucket: string, path: string): Promise<string | null> => {
   try {
     const compressedFile = await compressImage(file);
+    
+    if (!supabase) {
+      console.warn('Supabase env is missing; using local object URL as fallback.');
+      return URL.createObjectURL(compressedFile);
+    }
     
     const { data, error } = await supabase.storage
       .from(bucket)

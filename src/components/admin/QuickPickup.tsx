@@ -3,7 +3,7 @@ import { useApp } from '../../context/AppContext';
 import { Plus, MapPin, Phone, User, Building, CreditCard, ExternalLink } from 'lucide-react';
 
 export const QuickPickup: React.FC = () => {
-  const { customers, addCustomer, addPickup } = useApp();
+  const { customers, addCustomer, createPickupRequest } = useApp();
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -37,19 +37,12 @@ export const QuickPickup: React.FC = () => {
         bankName: formData.bankName,
         accountName: formData.accountName,
         accountNumber: formData.accountNumber,
-        locationUrl: formData.locationUrl
+        shareLocation: formData.locationUrl
       });
 
       // Add pickup request
       if (formData.estimatedLiters > 0) {
-        await addPickup({
-          customerId: newCustomer.id,
-          customerName: newCustomer.name,
-          customerPhone: newCustomer.phone,
-          customerAddress: newCustomer.address,
-          estimatedLiters: formData.estimatedLiters,
-          status: 'pending'
-        });
+        createPickupRequest(newCustomer.id, formData.estimatedLiters);
       }
 
       // Reset form
