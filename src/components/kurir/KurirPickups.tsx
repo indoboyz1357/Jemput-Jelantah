@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useApp } from '../../context/AppContext';
-import { Truck, MapPin, Phone, CheckCircle, Clock, AlertCircle, User } from 'lucide-react';
+import { useApp } from '../../context/hooks';
+import { Truck, Phone, CheckCircle, Clock, AlertCircle, User } from 'lucide-react';
 
 export const KurirPickups: React.FC = () => {
   const { currentUser, pickupRequests, updatePickupStatus } = useApp();

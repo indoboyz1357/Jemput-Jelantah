@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useState, ReactNode } from 'react';
 import { User, Customer, PickupRequest, Bill } from '../types';
 
 interface AppContextType {
@@ -18,15 +18,7 @@ interface AppContextType {
   updateBillPaymentProof: (billId: string, proofUrl: string) => void;
 }
 
-const AppContext = createContext<AppContextType | undefined>(undefined);
-
-export const useApp = () => {
-  const context = useContext(AppContext);
-  if (!context) {
-    throw new Error('useApp must be used within AppProvider');
-  }
-  return context;
-};
+export const AppContext = createContext<AppContextType | undefined>(undefined);
 
 const initialCustomers: Customer[] = [
   {

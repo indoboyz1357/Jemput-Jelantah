@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useApp } from '../../context/AppContext';
-import { Search, Users, Phone, MapPin, UserCheck, TrendingUp } from 'lucide-react';
+import { useApp } from '../../context/hooks';
+import { Search, Users, Phone, MapPin, UserCheck } from 'lucide-react';
 
 export const CustomerList: React.FC = () => {
   const { customers } = useApp();

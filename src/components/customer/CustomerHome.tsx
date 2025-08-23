@@ -1,5 +1,5 @@
 import React from 'react';
-import { useApp } from '../../context/AppContext';
+import { useApp } from '../../context/hooks';
 import { Customer } from '../../types';
 import { TrendingUp, Users, Droplets, Gift, Phone, MapPin, Calendar } from 'lucide-react';
 

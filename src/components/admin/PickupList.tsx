@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { useApp } from '../../context/AppContext';
-import { Receipt, Users, Truck, UserCheck, Filter, Edit2, Save, X, Upload, Image, Camera } from 'lucide-react';
+import { useApp } from '../../context/hooks';
+import { Receipt, Users, Truck, UserCheck, Filter, Upload, Camera } from 'lucide-react';
 import { uploadImage } from '../../lib/supabase';
 
 export const PickupList: React.FC = () => {
-  const { pickupRequests, customers, updatePickupStatus, updatePickupProof } = useApp();
+  const { pickupRequests, updatePickupStatus, updatePickupProof } = useApp();
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [actualLiters, setActualLiters] = useState<{ [key: string]: string }>({});
   const [uploadingProof, setUploadingProof] = useState<string | null>(null);
@@ -13,12 +13,6 @@ export const PickupList: React.FC = () => {
     if (statusFilter === 'all') return true;
     return request.status === statusFilter;
   });
-
-  const getCustomerName = (customerId?: string) => {
-    if (!customerId) return '-';
-    const customer = customers.find(c => c.id === customerId);
-    return customer?.name || 'Unknown';
-  };
 
   const getStatusConfig = (status: string) => {
     switch (status) {
@@ -86,7 +80,7 @@ export const PickupList: React.FC = () => {
       } else {
         alert('Gagal upload bukti pickup');
       }
-    } catch (error) {
+    } catch {
       alert('Error upload bukti pickup');
     } finally {
       setUploadingProof(null);

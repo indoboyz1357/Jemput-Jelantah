@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useApp } from '../../context/AppContext';
+import { useApp } from '../../context/hooks';
 import { Plus, Truck, Clock, CheckCircle, AlertCircle } from 'lucide-react';
 
 export const CustomerPickup: React.FC = () => {

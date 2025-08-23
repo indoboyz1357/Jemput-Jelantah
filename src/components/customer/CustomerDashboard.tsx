@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useApp } from '../../context/AppContext';
+import { useApp } from '../../context/hooks';
 import { LogOut, Home, Plus, History, Receipt } from 'lucide-react';
 import { CustomerHome } from './CustomerHome';
 import { CustomerPickup } from './CustomerPickup';

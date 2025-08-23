@@ -1,5 +1,5 @@
 import React from 'react';
-import { useApp } from '../../context/AppContext';
+import { useApp } from '../../context/hooks';
 import { History, Calendar, Droplets, CheckCircle, Clock, AlertCircle } from 'lucide-react';
 
 export const CustomerHistory: React.FC = () => {
