@@ -1,6 +1,6 @@
 import React from 'react';
-import { useApp } from '../../context/AppContext';
-import { Users, Truck, Receipt, TrendingUp, DollarSign, UserCheck } from 'lucide-react';
+import { useApp } from '../../context/hooks';
+import { Users, Truck, TrendingUp, DollarSign } from 'lucide-react';
 
 export const Summary: React.FC = () => {
   const { customers, pickupRequests, bills } = useApp();

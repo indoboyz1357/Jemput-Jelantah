@@ -1,5 +1,6 @@
 import React from 'react';
-import { AppProvider, useApp } from './context/AppContext';
+import { AppProvider } from './context/AppContext';
+import { useApp } from './context/hooks';
 import { Login } from './components/Login';
 import { AdminDashboard } from './components/admin/AdminDashboard';
 import { CustomerDashboard } from './components/customer/CustomerDashboard';

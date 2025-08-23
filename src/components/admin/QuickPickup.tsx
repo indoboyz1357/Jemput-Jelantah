@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useApp } from '../../context/AppContext';
-import { Plus, MapPin, Phone, User, Building, CreditCard, ExternalLink } from 'lucide-react';
+import { useApp } from '../../context/hooks';
+import { Plus, MapPin, User, Building, CreditCard, ExternalLink } from 'lucide-react';
 
 export const QuickPickup: React.FC = () => {
   const { customers, addCustomer, addPickup } = useApp();

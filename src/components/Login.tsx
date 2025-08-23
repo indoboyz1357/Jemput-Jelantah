@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useApp } from '../context/AppContext';
+import { useApp } from '../context/hooks';
 import { LogIn, Users, Truck, UserCog } from 'lucide-react';
 
 export const Login: React.FC = () => {
@@ -50,7 +50,7 @@ export const Login: React.FC = () => {
                 <button
                   key={value}
                   type="button"
-                  onClick={() => setRole(value as any)}
+                  onClick={() => setRole(value)}
                   className={`p-2 sm:p-3 rounded-lg border-2 transition-all duration-200 ${
                     role === value
                       ? `${color} border-transparent text-white`

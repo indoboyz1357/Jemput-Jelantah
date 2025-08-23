@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useApp } from '../../context/AppContext';
-import { LogOut, BarChart3, Zap, Users, Truck, Receipt, Menu } from 'lucide-react';
+import { useApp } from '../../context/hooks';
+import { LogOut, BarChart3, Zap, Users, Truck, Receipt } from 'lucide-react';
 import { QuickPickup } from './QuickPickup';
 import { CustomerList } from './CustomerList';
 import { PickupList } from './PickupList';
@@ -9,7 +9,6 @@ import { Summary } from './Summary';
 
 export const AdminDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState('summary');
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const { currentUser, logout } = useApp();
 
   const tabs = [
